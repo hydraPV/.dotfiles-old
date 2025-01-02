@@ -1,6 +1,7 @@
 #! /bin/bash
 
 # ASCII ART CREATED USING https://www.asciiart.eu/text-to-ascii-art
+
 echo "
 
     ███████████    ███                                                      
@@ -29,12 +30,14 @@ echo "
     "
 
 # ----------------- PROMPT 1 START -----------------
+
 read -p " " response
 
 # Mayus - minus
 response=$(echo "$response" | tr '[:upper:]' '[:lower:]')
 
 # ----------------- if 1 START -----------------
+
 if [[ "$response" == "y" ]]; then
 
   echo "What rice do you want to use?"
@@ -43,15 +46,17 @@ if [[ "$response" == "y" ]]; then
 
   # To add a rice:
   # Type the name of the rice and the key to select it on l44
-  # Copy the template in 181/209 or uncomment it and replace the data
+  # Copy the template in 187/215 or uncomment it and replace the data
 
   #       ----------------- PROMPT 2 START -----------------
+  #
   read -p " " response
 
   # Mayus - minus
   response=$(echo "$response" | tr '[:upper:]' '[:lower:]')
 
   #       ----------------- MOTD rice -----------------
+
   if [[ "$response" == "1" ]]; then
 
     # REPLACE FOR SYMLINKS THAT YOU DONT WANT TO DELETE  \( -path "Path/to/symlink/" -o -path "Path/to/symlink" -o -path "Path/to/symlink" \)
@@ -74,9 +79,11 @@ if [[ "$response" == "y" ]]; then
 
     echo "MOTD Rice succesfully applied"
     echo "You should reboot your system to correctly apply everything"
+
     #       ----------------- MOTD rice -----------------
 
     #       ----------------- Hyperbeast rice -----------------
+
   elif [[ "$response" == "2" ]]; then
 
     # REPLACE FOR SYMLINKS THAT YOU DONT WANT TO DELETE  \( -path "Path/to/symlink/" -o -path "Path/to/symlink" -o -path "Path/to/symlink" \)
@@ -132,21 +139,25 @@ if [[ "$response" == "y" ]]; then
     #       ----------------- Nord rice -----------------
 
     #       ----------------- Exit -----------------
+
   elif [[ "$response" == "c" ]]; then
 
     echo "No changes were made"
     echo "Aborting..."
     sleep 1
     exit
+
     #       ----------------- Exit -----------------
 
     #       ----------------- Wrong input -----------------
+
   else
 
     echo "Invalid input. Please press (y) for yes and (n) for no"
     echo "aborting..."
     sleep 1
     exit
+
     #       ----------------- Wrong input -----------------
 
   fi
@@ -200,4 +211,6 @@ fi
 #
 #           echo "X rice succesfully installed"
 #           echo "You should reboot your system to correctly apply everything"
+#
 #----------------- ADD RICE TEMPLATE -----------------
+
