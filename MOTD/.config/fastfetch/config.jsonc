@@ -189,7 +189,7 @@
 
     {
     "type": "terminalfont",
-    "key": "│  ├ Notifycation",
+    "key": "│  ├ Notification",
     "format": "Dunst",
     "keyColor": "white"
     },
