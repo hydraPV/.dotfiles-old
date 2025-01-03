@@ -1,7 +1,8 @@
 #! /bin/sh
 
 # Ascii art made using https://www.asciiart.eu/text-to-ascii-art
-echo "
+cat << "EOF"
+
 
 ██╗███╗   ██╗███████╗████████╗ █████╗ ██╗     ██╗     ███████╗██████╗ 
 ██║████╗  ██║██╔════╝╚══██╔══╝██╔══██╗██║     ██║     ██╔════╝██╔══██╗
@@ -10,319 +11,652 @@ echo "
 ██║██║ ╚████║███████║   ██║   ██║  ██║███████╗███████╗███████╗██║  ██║
 ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝
 
-"
+This is my installer script, this script will do the following
 
-# Asks if want to install the rices
-echo "This is the installer, this script will create the dotfiles directory and set up"
-echo "everything in there, this will create symlinks between ~/.config and ~/.dotfiles"
-echo "If you already have a .dotfiles directory, you will be asked later if you want to automatically do a backup"
-echo "This probably WONT harm your system, but in any way, are you 100% sure that you want to do this process?"
-echo " "
-echo "yes (y)"
-echo "no (n)"
+1) Install the needed packages
+2) Ask for a backup if needed
+3) Make and move needed directories
+4) Ask you for the default rice
 
-# This is the main prompt
-read -p " " MainResponse 
+Altough this **Should not** harm your system, execute this script under your own risk
+If you want to see more in depth what does this script do, just open it with a text editor or see it on github
 
-# Converts mayus inputs to minus inputs
+EOF
+
+# Main prompt
+read -p "Do you want to start the installation process? [Y/n]: " MainPrompt 
+# Converts lowercase inputs into uppercase inputs
 MainResponse=$(echo "$MainResponse" | tr '[:upper:]' '[:lower:]')
 
-# If MainResponse answer is yes
-if [[ "$MainResponse" == "y" ]]; then
 
-  # Package installation process
+case "$MainPrompt" in 
+  y)
+      # Package installation
+      echo "Installing needed packages"
+      echo " " 
+      # Define "packages" as a variable that contains all needed packages
+      packages=(bspwm sxhkd kitty fish firefox picom polybar neovim feh flameshot dunst fastfetch)
+      # &>/dev/null makes the input of the command invisible
+      sudo pacman -S "${packages[@]}" --noconfirm &>/dev/null
 
-  # Install packages
-  echo "Installing packages..."
-
-  # Variable packages equals to all the needed packages
-  packages=(bspwm sxhkd kitty fish firefox picom polybar neovim feh flameshot dunst fastfetch )
-  
-  # Install the packages
-  sudo pacman -S "${packages[@]}" --noconfirm &>/dev/null
-  echo "Done installing packages"
-
-  # Verify if packages where correctly installed
-  echo "Verifying packages installation..."
-  for package in "${packages[@]}"; do
-
-  if pacman -Q "$package" &>/dev/null; then
-
-      echo "$package Correctly installed"
-    
-  else
-
-      echo "$package Is not installed, try installing it manually later with pacman -S $package"
-      echo " "
-      echo "Aborting..."
-      sleep 1 
-      exit
-
-  fi
-  done
-
-  # Packages installation process done
-
-  # .dotfiles Backup process
-
-  # Checks if .dotfiles directory already exist and ask if want to do a backup
-  if [ -d "$HOME/.dotfiles/" ]; then
-    
-    # If .dotfiles already exists, asks if want to automatically do a backup
-    echo " " 
-
-    echo "There is already a .dotfiles directory in your system, would you like to automatically do a backup of your current .dotfiles directory?"
-    echo " "
-    echo "yes (y)"
-    echo "no (n)  (This will exit the installation process and undo any change made)"
-   
-    # This is the .dotfiles backup response
-    read -p " " BakResponse
-
-    # Converts mayus inputs to minus inputs
-    BakResponse=$(echo "$BakResponse" | tr '[:upper:]' '[:lower:]')
-
-    # If BakResponse answer is yes
-    if [[ "$BakResponse" == "y" ]]; then
-      
-      # Do a backup of the current .dotfiles directory
-      mv $HOME/.dotfiles .dotfiles.bak
-      
-      # Checks if the backup is correctly renamed
-      if [ -d $HOME/.dotfiles.bak ]; then
-      
-        echo ".dotfiles.bak was succesfully created"
-
-      else
-
-        echo ".dotfiles backup directory creation failed, do you want to exit the installation process?"
-        echo " "
-        echo "yes (y)"
-        echo "no (n)"
-        
-        # This is the abort response
-        read -p " " AbortResponse
-
-        # Converts mayus inputs to minus inputs
-        AbortResponse=$(echo "$AbortResponse" | tr '[:upper:]' '[:lower:]')
-
-        # If BakResponse answer is yes
-        if [[ "$AbortResponse" == "y" ]]; then
-
-          echo "Aborting..."
-              
-          # Packages uninstall process
-
-          # Asks if want to uninstall packages
-          echo "Do you want to uninstall the previously installed packages?"
-          echo "yes (y)"
-          echo "no (n)"
-
-          # This is the packages-uninstall response
-          read -p " " PackageUninstallResponse
-          
-          # Converts mayus inputs to minus inputs
-          PackageUninstallResponse=$(echo "PackageUninstallResponse" | tr '[:upper:]' '[:lower:]')
-              
-          # If PackageUninstallResponse answer is yes
-          if [[ "$PackageUninstallResponse" == "y" ]]; then
-            
-            # Package unninstall process
-
-            for package in "${packages[@]}"; do
-
-            # Uninstall packages
-            sudo pacman -Rns "$package" &>/dev/null
-
-              # Check if the package is still installed
-              if pacman -Q "$package" &>/dev/null; then
-
-                # Package uninstallation failed
-                echo "$package uninstallation failed. Try uninstalling it manually with: sudo pacman -Rns $package"
-
-                else
-
-                  # Package uninstallation successful
-                  echo "$package uninstallation successful."
-                  sleep 1 
-                  exit
-
-              fi
-            done
-
-            # Packages uninstall process done
-            
-          elif [[ "$PackageUninstallResponse" == "n" ]]; then
-
-            echo "No packages will be removed"
-            echo "Aborting..."
-            sleep 1
-            exit
-          
-          else
-
-            echo "Invalid input, please enter (y) for yes and (n) for no"
-            echo "Aborting"
-            sleep 1 
-            exit
-          
-          fi 
-        fi  
-      fi 
-    
-    else
-
-      echo "The installation process cannot be done if there is already a .dotfiles directory"
-      echo "Aborting..."
-      sleep 1
-
-      # Packages uninstall process
-
-      # Asks if want to uninstall packages
-      echo "Do you want to uninstall the previously installed packages?"
-      echo "yes (y)"
-      echo "no (n)"
-
-      # This is the packages-uninstall response
-      read -p " " PackageUninstallResponse2
-      
-      # Converts mayus inputs to minus inputs
-      response=packages-uninstall2=$(echo "PackageUninstallResponse2" | tr '[:upper:]' '[:lower:]')
-          
-      # If PackageUninstallResponse answer is yes
-      if [[ "$PackageUninstallResponse2" == "y" ]]; then
-        
-        # Package unninstall process
-
-        for package in "${packages[@]}"; do
-
-          # Uninstall packages
-          sudo pacman -Rns "$package" &>/dev/null
-
-          # Check if the package is still installed
+      # Packages install verification
+      echo "Verifying packages installation"
+        for package in "${packages[@]}"; do 
           if pacman -Q "$package" &>/dev/null; then
-
-            # Package uninstallation failed
-            echo "$package uninstallation failed. Try uninstalling it manually with: sudo pacman -Rns $package"
-
-            else
-
-              # Package uninstallation successful
-              echo "$package uninstallation successful."
-              sleep 1 
-              exit
-
+            echo "$package Successfully installed"
+          else
+            echo "$package Installation failed. Try insalling it manually"
           fi
         done
 
-        # Packages uninstall process done
-        
-      elif [[ "$PackageUninstallResponse2" == "n" ]]; then
+      echo " "
+      echo " "
+      echo "Package installation done"
+      echo "If a package installation failed, you should install it manually as soon as the installation script exits"  
+      echo " "
+      echo " "
+      sleep 1
 
-        echo "No packages will be removed"
-        echo "Aborting..."
-        sleep 1
-        exit
+      # Checking for already existing .dotfiles directory
+      if [ -d "$HOME/.dotfiles/" ]; then 
+        echo "There is already a ".dotfiles" directory in ~/"
+        echo "It is necesary for the installation to create a new directory"
+        echo " " 
+
+        # Loop for a valid input
+        while ! [[ "$BakPrompt" =~ ^[yn]$ ]]; do
+            read -p "Do you want to make a backup of your current .dotfiles directory? (change the name of the current .dotfiles to .dotfiles.bak) [Y/n]: " BakPrompt
+            if ! [[ "$BakPrompt" =~ ^[yn]$ ]]; then
+                echo "Invalid input. Please enter 'y' or 'n'."
+            fi
+        done
+
+        # Converts any uppercase input into a lowercase input
+        BakPrompt=$(echo "$BakPrompt" | tr '[:upper:]' '[:lower]')
+        
+        case "$BakPrompt" in
+          y)
+            # backup creation
+            echo " "
+            echo "Creating .dotfiles.bak directory..."
+            echo " "
+            mv $HOME/.dotfiles/ .dotfiles.bak
+            # Verifies if .dotfiles.bak exists, if so, the backup creation went good 
+            if [ -d "$HOME/.dotfiles.bak"]; then
+              echo "Backup Successfully created"
+            else
+              echo "Something went wrong creating a backup"
+              echo "If this keeps happening, manually create a backup using"
+              echo "mv $HOME/.dotfiles/ .dotfiles.bak"
+              echo " "
+              echo "Aborting..."
+              exit 0
+            fi
+            ;;
+        
+
+          n)
+            
+            echo "A new .dotfiles directory is needed for the installation"
+            echo "Aborting..."
+            exit 0
+            ;;
+
+          *)
+            echo "Invalid input"
+            echo "Enter 'y' or 'n'"
+            echo "Aborting..."
+            exit 1
+            ;;
+        esac    
+
+      else
+        "No already existing .dotfiles directory found"
+        "Proceeding"
+      fi
+
+      # Create and verifies .dotfiles exists
+      echo "Creating new .dotfiles directory on"
+      echo "$HOME/.dotfiles/"
+      mkdir $HOME/.dotfiles/
+      if [ -d "$HOME/.dotfiles/" ]; then
+        echo "Directory created Successfully"
+        echo "Moving dotfiles into $HOME/.dotfiles/..."
+
+        # Moves and verifies if the rices are where they need to be
+        mv Nord/ MOTD/ hyperbeast/ swap.sh $HOME/.dotfiles
+        if [ -d "$HOME/.dotfiles/MOTD" ] && [ -d "$HOME/.dotfiles/Nord/" ] && [ -d "$HOME/.dotfiles/hyperbeast" ]; then
+          echo "Successfully moved rices into .dotfiles"
+          echo "Proceeding"
+        else
+          echo "Something went wrong while moving directories"
+          echo "Aborting"
+          exit 1
+        fi
       
       else
-
-        echo "Invalid input, please enter (y) for yes and (n) for no"
+        echo "Something went wrong creating .dotfiles directory"
+        echo "You shouldn **NOT** make it manually, as it will be detected as a previously made directory and then deleted"
         echo "Aborting"
-        sleep 1 
-        exit
+      fi
+
+
+      # Asks for the rice to be started at the first reboot
+    
+      # Loop for valid input
+      while ! [[ "$RicePrompt" =~ ^[1-3]$ ]]; do
+      read -p "What Rice do you want to use at first? [Nord '1' MOTD '2' hyperbeast '3']: " RicePrompt
+        if ! [[ "$RicePrompt" =~ ^[1-3]$ ]]; then
+          echo "Invalid input. Please enter 1, 2, or 3."
+        fi
+      done
+
+      case "$RicePrompt" in
+        1)
+          echo "Applying Nord rice..."
+          echo "type your password if prompted to"
+          sudo rm -rf $HOME/.config/kitty
+          sudo rm -rf $HOME/.config/fish
+          
+          # Creates the symlink between .dotfiles/Nord and .config
+          ln -s $HOME/.dotfiles/Nord/.config/* $HOME/.config/
+          echo "Successfully created symlinks"
+          echo " "
+          echo "The installation process is done, you can now reboot your system and all should be applied"
+          echo "(you will need to install a display manager if you do not have one already)"
+          exit 0#! /bin/sh
+
+# Ascii art made using https://www.asciiart.eu/text-to-ascii-art
+cat << "EOF"
+
+
+██╗███╗   ██╗███████╗████████╗ █████╗ ██╗     ██╗     ███████╗██████╗ 
+██║████╗  ██║██╔════╝╚══██╔══╝██╔══██╗██║     ██║     ██╔════╝██╔══██╗
+██║██╔██╗ ██║███████╗   ██║   ███████║██║     ██║     █████╗  ██████╔╝
+██║██║╚██╗██║╚════██║   ██║   ██╔══██║██║     ██║     ██╔══╝  ██╔══██╗
+██║██║ ╚████║███████║   ██║   ██║  ██║███████╗███████╗███████╗██║  ██║
+╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝
+
+This is my installer script, this script will do the following
+
+1) Install the needed packages
+2) Ask for a backup if needed
+3) Make and move needed directories
+4) Ask you for the default rice
+
+Altough this **Should not** harm your system, execute this script under your own risk
+If you want to see more in depth what does this script do, just open it with a text editor or see it on github
+
+EOF
+
+# Main prompt
+read -p "Do you want to start the installation process? [Y/n]: " MainPrompt 
+# Converts lowercase inputs into uppercase inputs
+MainResponse=$(echo "$MainResponse" | tr '[:upper:]' '[:lower:]')
+
+
+case "$MainPrompt" in 
+  y)
+      # Package installation
+      echo "Installing needed packages"
+      echo " " 
+      # Define "packages" as a variable that contains all needed packages
+      packages=(bspwm sxhkd kitty fish firefox picom polybar neovim feh flameshot dunst fastfetch)
+      # &>/dev/null makes the input of the command invisible
+      sudo pacman -S "${packages[@]}" --noconfirm &>/dev/null
+
+      # Packages install verification
+      echo "Verifying packages installation"
+        for package in "${packages[@]}"; do 
+          if pacman -Q "$package" &>/dev/null; then
+            echo "$package Successfully installed"
+          else
+            echo "$package Installation failed. Try insalling it manually"
+          fi
+        done
+
+      echo " "
+      echo " "
+      echo "Package installation done"
+      echo "If a package installation failed, you should install it manually as soon as the installation script exits"  
+      echo " "
+      echo " "
+      sleep 1
+
+      # Checking for already existing .dotfiles directory
+      if [ -d "$HOME/.dotfiles/" ]; then 
+        echo "There is already a ".dotfiles" directory in ~/"
+        echo "It is necesary for the installation to create a new directory"
+        echo " " 
+
+        # Loop for a valid input
+        while ! [[ "$BakPrompt" =~ ^[yn]$ ]]; do
+            read -p "Do you want to make a backup of your current .dotfiles directory? (change the name of the current .dotfiles to .dotfiles.bak) [Y/n]: " BakPrompt
+            if ! [[ "$BakPrompt" =~ ^[yn]$ ]]; then
+                echo "Invalid input. Please enter 'y' or 'n'."
+            fi
+        done
+
+        # Converts any uppercase input into a lowercase input
+        BakPrompt=$(echo "$BakPrompt" | tr '[:upper:]' '[:lower]')
+        
+        case "$BakPrompt" in
+          y)
+            # backup creation
+            echo " "
+            echo "Creating .dotfiles.bak directory..."
+            echo " "
+            mv $HOME/.dotfiles/ .dotfiles.bak
+            # Verifies if .dotfiles.bak exists, if so, the backup creation went good 
+            if [ -d "$HOME/.dotfiles.bak"]; then
+              echo "Backup Successfully created"
+            else
+              echo "Something went wrong creating a backup"
+              echo "If this keeps happening, manually create a backup using"
+              echo "mv $HOME/.dotfiles/ .dotfiles.bak"
+              echo " "
+              echo "Aborting..."
+              exit 0
+            fi
+            ;;
+        
+
+          n)
+            
+            echo "A new .dotfiles directory is needed for the installation"
+            echo "Aborting..."
+            exit 0
+            ;;
+
+          *)
+            echo "Invalid input"
+            echo "Enter 'y' or 'n'"
+            echo "Aborting..."
+            exit 1
+            ;;
+        esac    
+
+      else
+        "No already existing .dotfiles directory found"
+        "Proceeding"
+      fi
+
+      # Create and verifies .dotfiles exists
+      echo "Creating new .dotfiles directory on"
+      echo "$HOME/.dotfiles/"
+      mkdir $HOME/.dotfiles/
+      if [ -d "$HOME/.dotfiles/" ]; then#! /bin/sh
+
+# Ascii art made using https://www.asciiart.eu/text-to-ascii-art
+cat << "EOF"
+
+
+██╗███╗   ██╗███████╗████████╗ █████╗ ██╗     ██╗     ███████╗██████╗ 
+██║████╗  ██║██╔════╝╚══██╔══╝██╔══██╗██║     ██║     ██╔════╝██╔══██╗
+██║██╔██╗ ██║███████╗   ██║   ███████║██║     ██║     █████╗  ██████╔╝
+██║██║╚██╗██║╚════██║   ██║   ██╔══██║██║     ██║     ██╔══╝  ██╔══██╗
+██║██║ ╚████║███████║   ██║   ██║  ██║███████╗███████╗███████╗██║  ██║
+╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝
+
+This is my installer script, this script will do the following
+
+1) Install the needed packages
+2) Ask for a backup if needed
+3) Make and move needed directories
+4) Ask you for the default rice
+
+Altough this **Should not** harm your system, execute this script under your own risk
+If you want to see more in depth what does this script do, just open it with a text editor or see it on github
+
+EOF
+
+# Main prompt
+read -p "Do you want to start the installation process? [Y/n]: " MainPrompt 
+# Converts lowercase inputs into uppercase inputs
+MainPrompt=$(echo "$MainResponse" | tr '[:upper:]' '[:lower:]')
+
+case "$MainPrompt" in 
+  y)
+      # Package installation
+      echo "Installing needed packages"
+      echo " " 
+      # Define "packages" as a variable that contains all needed packages
+      packages=(bspwm sxhkd kitty fish firefox picom polybar neovim feh flameshot dunst fastfetch)
+      # &>/dev/null makes the input of the command invisible
+      sudo pacman -S "${packages[@]}" --noconfirm &>/dev/null
+
+      # Packages install verification
+      echo "Verifying packages installation"
+        for package in "${packages[@]}"; do 
+          if pacman -Q "$package" &>/dev/null; then
+            echo "$package Successfully installed"
+          else
+            echo "$package Installation failed. Try insalling it manually"
+          fi
+        done
+
+      echo " "
+      echo " "
+      echo "Package installation done"
+      echo "If a package installation failed, you should install it manually as soon as the installation script exits"  
+      echo " "
+      echo " "
+      sleep 1
+
+      # Checking for already existing .dotfiles directory
+      if [ -d "$HOME/.dotfiles/" ]; then 
+        echo "There is already a '.dotfiles' directory in ~/"
+        echo "It is necesary for the installation to create a new directory"
+        echo " " 
+
+        # Loop for a valid input
+        while ! [[ "$BakPrompt" =~ ^[yn]$ ]]; do
+            read -p "Do you want to make a backup of your current .dotfiles directory? (change the name of the current .dotfiles to .dotfiles.bak) [Y/n]: " BakPrompt
+            if ! [[ "$BakPrompt" =~ ^[yn]$ ]]; then
+                echo "Invalid input. Please enter 'y' or 'n'."
+            fi
+        done
+
+        # Converts any uppercase input into a lowercase input
+        BakPrompt=$(echo "$BakPrompt" | tr '[:upper:]' '[:lower]')
+        
+        case "$BakPrompt" in
+          y)
+            # backup creation
+            echo " "
+            echo "Creating .dotfiles.bak directory..."
+            echo " "
+            mv $HOME/.dotfiles/ .dotfiles.bak
+            # Verifies if .dotfiles.bak exists, if so, the backup creation went good 
+            if [ -d "$HOME/.dotfiles.bak" ]; then
+              echo "Backup Successfully created"
+            else
+              echo "Something went wrong creating a backup"
+              echo "If this keeps happening, manually create a backup using"
+              echo "mv $HOME/.dotfiles/ .dotfiles.bak"
+              echo " "
+              echo "Aborting..."
+              exit 0
+            fi
+            ;;
+        
+
+          n)
+            
+            echo "A new .dotfiles directory is needed for the installation"
+            echo "Aborting..."
+            exit 0
+            ;;
+
+          *)
+            echo "Invalid input"
+            echo "Enter 'y' or 'n'"
+            echo "Aborting..."
+            exit 1
+            ;;
+        esac    
+
+      else
+        "No already existing .dotfiles directory found"
+        "Proceeding"
+      fi
+
+      # Create and verifies .dotfiles exists
+      echo "Creating new .dotfiles directory on"
+      echo "$HOME/.dotfiles/"
+      mkdir $HOME/.dotfiles/
+      if [ -d "$HOME/.dotfiles/" ]; then
+        echo "Directory created Successfully"
+        echo "Moving dotfiles into $HOME/.dotfiles/..."
+
+        # Moves and verifies if the rices are where they need to be
+        mv Nord/ MOTD/ hyperbeast/ swap.sh $HOME/.dotfiles
+        if [ -d "$HOME/.dotfiles/MOTD" ] && [ -d "$HOME/.dotfiles/Nord/" ] && [ -d "$HOME/.dotfiles/hyperbeast" ]; then
+          echo "Successfully moved rices into .dotfiles"
+          echo "Proceeding"
+        else
+          echo "Something went wrong while moving directories"
+          echo "Aborting"
+          exit 1
+        fi
       
-      fi 
-    fi   
-  fi
-  
-  else
+      else
+        echo "Something went wrong creating .dotfiles directory"
+        echo "You shouldn **NOT** make it manually, as it will be detected as a previously made directory and then deleted"
+        echo "Aborting"
+      fi
 
-    echo "There is no .dotfiles directory"
-    sleep 0.5
 
-  fi
-  
-  # Create directories
-  echo "Creating directories..."
-  mkdir $HOME/.dotfiles/
-  mv MOTD/ Nord/ hyperbeast/ $HOME/.dotfiles/
-
-  # Checks if created directories exist
-  if [ -d "$HOME/.dotfiles/MOTD/" ] && [ -d "$HOME/.dotfiles/Nord/" ] && [ -d "$HOME/.dotfiles/hyperbeast/" ]; then
-
-    echo "Done creating directories..."
-  
-  else
-
-    # Directory creating process failed
-    echo "Something went wrong creating directories"
-    echo "Aborting..."
-    sleep 1
-    exit
-
-  fi
-
-  # Asks for the default rice
-  echo "What rice do you want to apply at first?"
-  echo "MOTD (1) Nord (2) Hyperbeast (3)"
-  read -p " " RiceResponse
-  
-  if [[ "$RiceResponse" == "1" ]]; then
+      # Asks for the rice to be started at the first reboot
     
-    # Create symlinks
-    echo "Creating symlinks..."
-    ln -s $HOME/.dotfiles/MOTD/.config/* $HOME/.config/
-    sleep 0.3
-    echo "Done creating symlinks"
+      # Loop for valid input
+      while ! [[ "$RicePrompt" =~ ^[1-3]$ ]]; do
+      read -p "What Rice do you want to use at first? [Nord '1' MOTD '2' hyperbeast '3']: " RicePrompt
+        if ! [[ "$RicePrompt" =~ ^[1-3]$ ]]; then
+          echo "Invalid input. Please enter 1, 2, or 3."
+        fi
+      done
 
-    echo "Installation ready, please reboot your system"
-    exit
+      case "$RicePrompt" in
+        1)
+          echo "Applying Nord rice..."
+          echo "type your password if prompted to"
+          sudo rm -rf $HOME/.config/kitty
+          sudo rm -rf $HOME/.config/fish
+          
+          # Creates the symlink between .dotfiles/Nord and .config
+          ln -s $HOME/.dotfiles/Nord/.config/* $HOME/.config/
+          echo "Successfully created symlinks"
+          echo " "
+          echo "The installation process is done, you can now reboot your system and all should be applied"
+          echo "(you will need to install a display manager if you do not have one already)"
+          exit 0
+          ;;
 
-  elif [[ "$RiceResponse" == "2" ]]; then
-    
-    # Create symlinks
-    echo "Creating symlinks..."
-    ln -s $HOME/.dotfiles/Nord/.config/* $HOME/.config/
-    sleep 0.3
-    echo "Done creating symlinks"
+        2)
+          echo "Applying MOTD rice..."
+          echo "type your password if prompted to"
+          sudo rm -rf $HOME/.config/kitty
+          sudo rm -rf $HOME/.config/fish
+          
 
-    echo "Installation ready, please reboot your system"
-    exit
+          # Creates the symlink between .dotfiles/MOTD and .config
+          ln -s $HOME/.dotfiles/MOTD/.config/* $HOME/.config/
+          echo "Successfully created symlinks"
+          echo " "
+          echo "The installation process is done, you can now reboot your system and all should be applied"
+          echo "(you will need to install a display manager if you do not have one already)"
+          exit 0
+          ;;
+        3)
+          echo "Applying Hyperbeast rice..."
+          echo "type your password if prompted to"
+          sudo rm -rf $HOME/.config/kitty
+          sudo rm -rf $HOME/.config/fish
+          
+          # Creates the symlink between .dotfiles/MOTD and .config
+          ln -s $HOME/.dotfiles/hyperbeast/.config/* $HOME/.config/
+          echo "Successfully created symlinks"
+          echo " "
+          echo "The installation process is done, you can now reboot your system and all should be applied"
+          echo "(you will need to install a display manager if you do not have one already)"
+          exit 0
+          ;;
+        
+        *)
+          echo "Invalid input. Please press '1' '2' or '3'"
+          echo "Aborting..."
+          exit 1
+          ;;
+      esac
+      ;;
 
-  elif [[ "$RiceResponse" == "3" ]]; then
-    
-    # Create symlinks
-    echo "Creating symlinks..."
-    ln -s $HOME/.dotfiles/hyperbeast/.config/* $HOME/.config/
-    sleep 0.3
-    echo "Done creating symlinks"
+  n)
 
-    echo "Installation ready, please reboot your system"
-    exit
+    echo "Aborting installation..."
+    exit 0
+    ;;
   
-  else
+  *)
     
-    # Invalid input message
-    echo "Invalid input. Please press (1) for MOTD, (2) for Nord and (3) for hyperbeast"
-    echo "Aborting..."
-    sleep 1
-    exit
-    
-  fi
-
-elif [[ "$MainResponse" == "n" ]]; then
+    echo "Invalid input"
+    echo "Enter 'y' or 'n'"
+    exit 1
+    ;;
   
-  echo "No changes were made"
-  echo "Aborting..."
-  sleep 1
-  exit
+esac   
 
-else 
+        echo "Directory created Successfully"
+        echo "Moving dotfiles into $HOME/.dotfiles/..."
 
-  # Invalid input message
-  echo "Invalid input. Please press (y) for yes and (n) for no"
-  echo "Aborting..."
-  sleep 1
-  exit
+        # Moves and verifies if the rices are where they need to be
+        mv Nord/ MOTD/ hyperbeast/ swap.sh $HOME/.dotfiles
+        if [ -d "$HOME/.dotfiles/MOTD" ] && [ -d "$HOME/.dotfiles/Nord/" ] && [ -d "$HOME/.dotfiles/hyperbeast" ]; then
+          echo "Successfully moved rices into .dotfiles"
+          echo "Proceeding"
+        else
+          echo "Something went wrong while moving directories"
+          echo "Aborting"
+          exit 1
+        fi
+      
+      else
+        echo "Something went wrong creating .dotfiles directory"
+        echo "You shouldn **NOT** make it manually, as it will be detected as a previously made directory and then deleted"
+        echo "Aborting"
+      fi
 
-fi 
+
+      # Asks for the rice to be started at the first reboot
+    
+      # Loop for valid input
+      while ! [[ "$RicePrompt" =~ ^[1-3]$ ]]; do
+      read -p "What Rice do you want to use at first? [Nord '1' MOTD '2' hyperbeast '3']: " RicePrompt
+        if ! [[ "$RicePrompt" =~ ^[1-3]$ ]]; then
+          echo "Invalid input. Please enter 1, 2, or 3."
+        fi
+      done
+
+      case "$RicePrompt" in
+        1)
+          echo "Applying Nord rice..."
+          echo "type your password if prompted to"
+          sudo rm -rf $HOME/.config/kitty
+          sudo rm -rf $HOME/.config/fish
+          
+          # Creates the symlink between .dotfiles/Nord and .config
+          ln -s $HOME/.dotfiles/Nord/.config/* $HOME/.config/
+          echo "Successfully created symlinks"
+          echo " "
+          echo "The installation process is done, you can now reboot your system and all should be applied"
+          echo "(you will need to install a display manager if you do not have one already)"
+          exit 0
+          ;;
+
+        2)
+          echo "Applying MOTD rice..."
+          echo "type your password if prompted to"
+          sudo rm -rf $HOME/.config/kitty
+          sudo rm -rf $HOME/.config/fish
+          
+
+          # Creates the symlink between .dotfiles/MOTD and .config
+          ln -s $HOME/.dotfiles/MOTD/.config/* $HOME/.config/
+          echo "Successfully created symlinks"
+          echo " "
+          echo "The installation process is done, you can now reboot your system and all should be applied"
+          echo "(you will need to install a display manager if you do not have one already)"
+          exit 0
+          ;;
+        3)
+          echo "Applying Hyperbeast rice..."
+          echo "type your password if prompted to"
+          sudo rm -rf $HOME/.config/kitty
+          sudo rm -rf $HOME/.config/fish
+          
+          # Creates the symlink between .dotfiles/MOTD and .config
+          ln -s $HOME/.dotfiles/hyperbeast/.config/* $HOME/.config/
+          echo "Successfully created symlinks"
+          echo " "
+          echo "The installation process is done, you can now reboot your system and all should be applied"
+          echo "(you will need to install a display manager if you do not have one already)"
+          exit 0
+          ;;
+        
+        *)
+          echo "Invalid input. Please press '1' '2' or '3'"
+          echo "Aborting..."
+          exit 1
+          ;;
+      esac
+      ;;
+
+  n)
+
+    echo "Aborting installation..."
+    exit 0
+    ;;
+  
+  *)
+    
+    echo "Invalid input"
+    echo "Enter 'y' or 'n'"
+    exit 1
+    ;;
+  
+esac   
+
+          ;;
+
+        2)
+          echo "Applying MOTD rice..."
+          echo "type your password if prompted to"
+          sudo rm -rf $HOME/.config/kitty
+          sudo rm -rf $HOME/.config/fish
+          
+
+          # Creates the symlink between .dotfiles/MOTD and .config
+          ln -s $HOME/.dotfiles/MOTD/.config/* $HOME/.config/
+          echo "Successfully created symlinks"
+          echo " "
+          echo "The installation process is done, you can now reboot your system and all should be applied"
+          echo "(you will need to install a display manager if you do not have one already)"
+          exit 0
+          ;;
+        3)
+          echo "Applying Hyperbeast rice..."
+          echo "type your password if prompted to"
+          sudo rm -rf $HOME/.config/kitty
+          sudo rm -rf $HOME/.config/fish
+
+          # Creates the symlink between .dotfiles/MOTD and .config
+          ln -s $HOME/.dotfiles/hyperbeast/.config/* $HOME/.config/
+          echo "Successfully created symlinks"
+          echo " "
+          echo "The installation process is done, you can now reboot your system and all should be applied"
+          echo "(you will need to install a display manager if you do not have one already)"
+          exit 0
+          ;;
+        
+        *)
+          echo "Invalid input. Please press '1' '2' or '3'"
+          echo "Aborting..."
+          exit 1
+          ;;
+      esac
+      ;;
+
+  n)
+
+    echo "Aborting installation..."
+    exit 0
+    ;;
+  
+  *)
+    
+    echo "Invalid input"
+    echo "Enter 'y' or 'n'"
+    exit 1
+    ;;
+  
+esac   
