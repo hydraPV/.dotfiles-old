@@ -1,0 +1,91 @@
+# App shortcuts --------------------------------
+
+# Terminal emulator
+super + Return
+	kitty
+
+# Launcher
+super + d
+	~/.dotfiles/BSPWM-Rices/Nord/.config/rofi/launchers/type-3/launcher.sh
+
+# Firefox
+super + b
+	firefox
+
+# Screenshot
+super + s
+	flameshot gui
+# -----------------------------------------------
+
+
+# Bpsmw controls --------------------------------
+
+# Quit/restart bspwm
+super + alt + {q,r}
+	bspc {quit,wm -r }
+
+# Make sxhkd reload its configuration files:
+super + Escape
+	pkill -USR1 -x sxhkd
+
+# close and kill
+super + {_,shift + }w
+	bspc node -{c,k}
+# -----------------------------------------------
+								
+# Window controls -------------------------------
+
+# alternate between the tiled and monocle layout
+super + f
+	bspc desktop -l next
+
+# expand window
+super + alt + {Left,Down,Up,Right}
+	bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+
+# unexpand window
+super + alt + shift + {Left,Down,Up,Right}
+	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+
+# resize gaps 
+super { ,+ shift }+ z
+	bspc config window_gap $(($(bspc config window_gap) {+,-} 3))
+
+# focus or send to the given desktop
+super + {_,shift + }{1-9,0}
+	bspc {desktop -f,node -d } '^{1-9,10}'
+
+# focus the last node/desktop
+super + {grave,Tab}
+	bspc {node,desktop} -f last
+
+# focus the node in the given direction
+super + {_,shift + }{Left,Down,Up,Right}
+ bspc node -{f,s} {west,south,north,east}
+
+# Rotate Windows
+super + {x,c}
+	bspc node @/ -R {90,270}
+
+# Toggle tiling mode of window
+super + shift + t
+	bspc node -t {pseudo_tiled,tiled}
+super + t
+	bspc node -t floating && window-placer $(bspc query -T -d | grep -o '"state":"floating"' | wc -l),bspc node -t tiled}
+
+# move a floating window
+super + alt + {Left,Down,Up,Right}
+	bspc node -v {-20 0,0 20,0 -20,20 0}
+# -----------------------------------------------
+
+
+# Preselection contols --------------------------
+ 
+# preselect the direction
+super + ctrl + {Left,Down,Up,Right}
+	bspc node -p {west,south,north,east}
+
+# cancel the preselection for the focused node
+super + space
+	bspc node -p cancel
+# -----------------------------------------------
