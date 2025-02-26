@@ -1,0 +1,36 @@
+[
+	{
+		"position": "top",
+		"height": 10,
+		 
+
+		"modules-center": ["hyprland/workspaces"],
+		"modules-right": ["clock"],
+		"modules-left": [
+			"memory",
+			"cpu",
+		],
+
+		"hyprland/workspaces": {
+			"format": "{icon}",
+			"format-icons": {
+				"active":"",
+				"default":"",
+			},
+			"sort-by-number": true 
+		},
+			"clock": {
+    			"format": "{:%H:%M}",
+    		},
+			"memory":
+			{
+    			"interval": 30,
+    			"format": "{percentage}  "
+			},
+			"cpu": {
+			"interval": 10,
+			"format": "{usage}% ",
+			"max-length": 10
+}
+	}
+]

@@ -1,0 +1,60 @@
+window#waybar {
+    background-color: rgba(43, 48, 59, 0.5);
+    color: #ffffff;
+}
+
+/*
+window#waybar.empty {
+    background-color: transparent;
+}
+window#waybar.solo {
+    background-color: #FFFFFF;
+}
+*/
+#workspaces button {
+    box-shadow: none;
+    text-shadow: none;
+    padding: 2px;
+
+  
+    color: rgba(167, 206, 238, 0.562);
+  }
+  
+button:hover {
+    background: inherit;
+    box-shadow: #a7ceee;    
+}
+
+#workspaces button:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+#workspaces button.active{
+	font-family: 'Hack Nerd Font';
+	font-size: 20px;
+	color: #a7ceee;
+}
+
+#clock{
+	font-family: 'Hack Nerd Font';
+	color: #CEECF7;
+	padding: 0px 20px;
+	margin: 0px;
+	background: rgba(0,0,0,0);
+}
+
+#memory{
+	font-family: 'Hack Nerd Font';
+	color: #CEECF7;
+	padding: 0px 20px;
+	margin: 0px;
+	background: rgba(0,0,0,0);
+}
+
+#cpu{
+	font-family: 'Hack Nerd Font';
+	color: #CEECF7;
+	padding: 0px 5px;
+	margin: 0px;
+	background: rgba(0,0,0,0);
+}
