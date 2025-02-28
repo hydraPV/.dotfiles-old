@@ -1,0 +1,52 @@
+/* GENERAL */
+* {
+	font-family: 'BlexMono Nerd Font';
+	font-size: 20px;
+	min-height: 0;
+  }
+
+  
+window#waybar {
+    background-color: rgba(43, 48, 59, 0.459);
+}
+
+#clock{
+	padding: 5px 30px;
+	color: #CEECF7;
+	background: rgba(0,0,0,0.080);
+}
+
+#memory{
+	padding: 5px 20px;
+	color: #CEECF7;
+	background: rgba(0, 0, 0, 0.080);
+	font-family: 'BlexMono Nerd Font';
+	font-size: 17px;
+}
+
+#cpu{
+	padding: 5px 25px;
+	color: #CEECF7;
+	background: rgba(0,0,0,0.080);
+	font-family: 'BlexMono Nerd Font';
+	font-size: 17px;
+}
+
+#workspaces button {
+    background: rgba(0, 0, 0, 0.080);
+	border: none;
+	border-color: #CEECF7;
+	box-shadow: none;
+    text-shadow: none;
+	padding-right: 12px;
+}
+
+#workspaces button.active{
+	color: #9ae0fa;
+	padding: 5px 10px;
+	background: rgba(0,0,0,0.150);
+	padding-right: 12px;
+	margin: 0px 5px;
+}
+
+

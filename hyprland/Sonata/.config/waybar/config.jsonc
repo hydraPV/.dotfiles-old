@@ -1,0 +1,71 @@
+// IT JUST WORKS - TODD HOWARD
+
+[
+
+//		General bar 		
+	{
+		"position": "top",
+		 
+
+//		Modules Placement
+		"modules-center":[
+			"hyprland/workspaces",
+		],
+
+		"modules-right": [
+			"clock",
+		],
+
+		"modules-left": [
+			"memory",
+			"cpu",
+		],
+
+
+//		Modules
+
+		// Hyprland module
+		"hyprland/workspaces": {
+
+			// Show empty workspaces
+				"persistent-workspaces": {
+					"*": 6
+				},
+
+			// Icons
+			"format": "{icon}",
+				"format-icons": {
+					"active":"",
+					"default":"",
+				},
+			},
+
+			"clock": {
+    			"format": "{:%H:%M}",
+
+				// Show full date on hover
+				"tooltip": "true",
+				"tooltip-format": "{:%d-%m}",
+    		},
+
+
+			"memory":{
+    			"interval": 10,
+    			"format": "{percentage}  ",
+
+				// Show used / total on hover
+				"tooltip": "true",
+				"tooltip-format": "{used} / {total}",
+			},
+
+
+			"cpu": {
+				"interval": 10,
+				"format": "{usage} ",
+
+				// Show more data on hover
+				"tooltip": "true",
+				"tooltip-format": "{load}",
+			}
+	}
+]
