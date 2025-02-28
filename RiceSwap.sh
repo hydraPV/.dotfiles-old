@@ -66,16 +66,23 @@ Symlinks() {
       echo " $basefile Please do this symlink manually later"
     fi
   done
+  
+  sleep 1
+  echo " "
+  echo " "
+  echo "Swapping process finished, you will be logged out in 30 seconds"
+  echo "if you changed from a bspwm rice to a hyprland rice, please select 'hyprland' on SDDM"
+  echo "if you changed from a hyprland rice to a bspwm rice, please select 'bspwm' on SDDM"
+  echo "if you didn't changed your window manager, just log on SDDM"
 
-  # Detects the current WM session
-  WM=$(xprop -root | grep "_NET_WM_NAME(WM_NAME)" | awk -F ' = ' '{print $2}' | tr -d '"')
+  sleep 20
+  for i in {10..1}; do
+      echo "$i"
+      sleep 1
+  done
 
-  # Log out and exec Hyprland if the WM is BSPWM
-  if [[ "$WM" == "BSPWM" ]]; then
-    pgrep -x bspwm &>/dev/null && bspc quit && exec hyprland
-  elif [[ "$WM" == "Hyprland" ]]; then
-    pgrep -x hyprland &>/dev/null && hyprctl quit && exec bspwm
-  fi
+  sudo systemctl restart sddm
+
 }
 
 # Prompt for window manager choice
