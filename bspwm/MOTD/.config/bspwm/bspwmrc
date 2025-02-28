@@ -8,14 +8,18 @@ sleep 0.1
 picom &
 sleep 0.1
 
+killall sxhkd
+sleep 0.1
+pgrep -x sxhkd > /dev/null || sxhkd &
+
 killall polybar
-sleep 0.2
+sleep 0.1
 polybar &
 
 kitty -e fish -c "fastfetch; exec fish" &  
 
 killall dunst
-sleep 0.2
+sleep 0.1
 dunst &
 
 feh --bg-scale  ~/.dotfiles/bspwm/MOTD/wallpapers/wallpaper.jpg

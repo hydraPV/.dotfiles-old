@@ -1,7 +1,5 @@
 #! /bin/sh
 
-#! /bin/sh
-
 # -----------------------------------------------
 
 # Autostart
@@ -10,19 +8,22 @@ sleep 0.1
 picom &
 sleep 0.1
 
+killall sxhkd
+sleep 0.1
+pgrep -x sxhkd >/dev/null || sxhkd &
+
 killall polybar
-sleep 0.2
+sleep 0.1
 polybar &
 
-kitty -e fish -c "fastfetch; exec fish" &  
+kitty -e fish -c "fastfetch; exec fish" &
 
 killall dunst
-sleep 0.2
+sleep 0.1
 dunst &
 
-feh --bg-scale  ~/.dotfiles/BSPWM-Rices/Nord/wallpapers/wallpaper6.jpg
-setxkbmap es 
-pgrep -x sxhkd > /dev/null || sxhkd &
+feh --bg-scale ~/.dotfiles/bspwm/Nord/wallpapers/wallpaper6.jpg
+setxkbmap es
 
 # -----------------------------------------------
 
@@ -63,7 +64,6 @@ bspc config borderless_monocle false # border for when there is only 1 window (m
 
 # Mouse
 bspc config focus_follows_pointer true
-
 
 # -----------------------------------------------
 

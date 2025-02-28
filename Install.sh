@@ -41,9 +41,10 @@ echo " "
 
 # Capture the input of the distribution selection
 while :; do
-    read -r -p "Enter your choice [1-5]: " DistroPrompt
+    echo "Enter your choice [1-5]: "
+    read -r -p "󱞩 " DistroPrompt
     [[ "$DistroPrompt" =~ ^[1-5]$ ]] && break
-    echo "Invalid input. Please enter [1-5]."
+    echo " Please enter [1-5]."
 done
 
 
@@ -100,10 +101,11 @@ if [ -d "$HOME/.dotfiles/" ]; then
     echo " " 
 
     while :; do
-    read -r -p "Do you want to make a backup of your current .dotfiles directory? [Y/n]: " BakPrompt
+    echo "Do you want to make a backup of your current .dotfiles directory? [Y/n]"
+    read -r -p "󱞩 " BakPrompt
     BakPrompt=$(echo "$BakPrompt" | tr '[:upper:]' '[:lower:]')
     [[ "$BakPrompt" =~ ^(y|n|)$ ]] && break
-    echo "Invalid input. Please enter [Y/n]."
+    echo " Please enter [Y/n]."
     done
 
     # Converts any uppercase input into lowercase
@@ -144,7 +146,7 @@ fi
 
 # Dotfiles setup
 echo "creating directory..."
-mkdir $HOME/.dotfiles && { echo " Directory created."; } || { echo " Failed to create directory."; exit 1; }
+mkdir "$HOME/.dotfiles" && { echo " Directory created."; } || { echo " Failed to create directory."; exit 1; }
 
 echo "Moving dotfiles..."
 mv bspwm hyprland "$HOME/.dotfiles" && { echo " Directories moved."; } || { echo " Failed to move directories."; exit 1; }

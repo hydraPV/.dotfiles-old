@@ -6,7 +6,7 @@ super + Return
 
 # Launcher
 super + d
-	~/.dotfiles/BSPWM-Rices/Nord/.config/rofi/launchers/type-3/launcher.sh
+	~/.dotfiles/bspwm/Nord/.config/rofi/launchers/type-3/launcher.sh
 
 # Firefox
 super + b
