@@ -66,19 +66,18 @@ Symlinks() {
       echo " $basefile Please do this symlink manually later"
     fi
   done
-  
+
   sleep 1
   echo " "
   echo " "
-  echo "Swapping process finished, you will be logged out in 30 seconds"
-  echo "if you changed from a bspwm rice to a hyprland rice, please select 'hyprland' on SDDM"
-  echo "if you changed from a hyprland rice to a bspwm rice, please select 'bspwm' on SDDM"
-  echo "if you didn't changed your window manager, just log on SDDM"
-
-  sleep 20
+  echo "  Swap complete."
+  echo "If the WM didn't change, press Ctrl+C."
+  echo "If it did, wait to be logged out."
+  echo "At the SDDM screen, select the correct WM."
+  sleep 10
   for i in {10..1}; do
-      echo "$i"
-      sleep 1
+    echo "$i"
+    sleep 1
   done
 
   sudo systemctl restart sddm
