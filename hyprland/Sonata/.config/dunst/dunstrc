@@ -9,7 +9,7 @@
 # Window 
     width = 500
     frame_width = 0
-    corner_radius = 2
+    corner_radius = 0
     font = SauceCodePro Nerd Font 16
 
     separator_height = 3
@@ -49,13 +49,13 @@
     
  # Colors
 [urgency_low]
-    background = "#2e3440"
-    foreground = "#d8dee9"
+    background = "#254e70"
+    foreground = "#c9f1f6"
     timeout = 5
 
 [urgency_normal]
-    background = "#2e3440"
-    foreground = "#d8dee9"
+    background = "#254e70"
+    foreground = "#c9f1f6"
     timeout = 5
     override_pause_level = 30
 
