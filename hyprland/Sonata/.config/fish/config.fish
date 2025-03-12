@@ -1,8 +1,7 @@
 set -g fish_greeting ''
-
+set -U fish_prompt_pwd_dir_length 4
 function fish_prompt
-
-    set_color 89c1f5; echo -n [(prompt_pwd)]
-    set_color 404040; echo -n " - "
-    set_color 61b0ff; echo -n " > "
+    echo " "
+    set_color 7ba7c2; echo " 󰉓  "(prompt_pwd)  
+    set_color d0e3ea; echo -n " Hydra "
 end
