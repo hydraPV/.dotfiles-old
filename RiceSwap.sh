@@ -119,16 +119,17 @@ b)
 h)
   echo "Select a Hyprland Rice"
   while true; do
-    echo -e "\033[1mSonata\033[0m [S]"
+    echo -e "\033[1mSonata\033[0m [S] / \033[1mGruvbox\033[0m [G] (yes very original) "
     read -r -p "󱞩 " HyprPrompt
     echo " "
     HyprPrompt="${HyprPrompt,,}"
-    [[ "$HyprPrompt" =~ ^(s)$ ]] && break
-    echo " Please enter [S]."
+    [[ "$HyprPrompt" =~ ^(s|g|)$ ]] && break
+    echo " Please enter [S] or [G]."
   done
 
   case "$HyprPrompt" in
   s) Symlinks "$HOME/.dotfiles/hyprland/Sonata/.config/" "$HOME/.config/" ;;
+  g) Symlinks "$HOME/.dotfiles/hyprland/Gruvbox/.config/" "$HOME/.config/" ;;
   esac
   ;;
 
