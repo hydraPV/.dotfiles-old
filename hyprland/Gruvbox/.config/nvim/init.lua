@@ -3,6 +3,9 @@ require("config.lazy")
 
 --      General Settings
 
+-- Makes nvim use system clipboard
+vim.opt.clipboard = "unnamedplus"
+
 -- Disable netrw (built-in file explorer)
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
