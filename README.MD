@@ -1,5 +1,5 @@
 <h1> dotfiles </h1>
-
+<h2> Note: This is mostly a personal repository that i made to learn git, im not a programmer and there is probably an enormous amount of mistakes in this repository. </h2>
 ## Info
 
 + OS - [Arch Linux](https://archlinux.org/) 
@@ -7,7 +7,7 @@
 + Terminal emulator - [Kitty](https://github.com/kovidgoyal/kitty)
 + Shell - [Fish](https://github.com/fish-shell/fish-shell)
 + Bar - [Polybar](https://github.com/polybar/polybar) / [Waybar](https://github.com/Alexays/Waybar)
-+ Launcher - [Rofi](https://github.com/davatorium/rofi) / [Tofi](https://github.com/philj56/tofi)
++ Launcher - [Rofi](https://github.com/davatorium/rofi) 
 
 ## Rices
 <p align="center">
