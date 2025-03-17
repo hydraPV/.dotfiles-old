@@ -1,12 +1,11 @@
+# -----------------------------------------------
 [global]
 
-
-# Position
+# General
     monitor = 1
     follow = keyboard
     origin = top-center
-
-# Window 
+ 
     width = 400
     frame_width = 0
     corner_radius = 2
@@ -29,6 +28,8 @@
     hide_duplicate_count = false
     show_indicators = false
 
+# -----------------------------------------------
+
 # Icons
     enable_recursive_icon_lookup = true
     icon_theme = suru++
@@ -39,6 +40,7 @@
     icon_corner_radius = 5
     text_icon_padding = 6
 
+# -----------------------------------------------
 
 # Misc
     browser = firefox
@@ -46,7 +48,9 @@
     always_run_script = true
     title = Dunst
     class = Dunst
-    
+
+# -----------------------------------------------
+
  # Colors
 [urgency_low]
     background = "#262626"
@@ -64,4 +68,7 @@
     foreground = "#ffffff"
     frame_color = "#ff0000"
     timeout = 0
-    override_pause_level = 60    
+    override_pause_level = 60
+
+# -----------------------------------------------
+

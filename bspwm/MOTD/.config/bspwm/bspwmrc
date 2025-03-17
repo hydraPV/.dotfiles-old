@@ -4,27 +4,24 @@
 
 # Autostart
 killall picom
-sleep 0.1
+sleep 0.5
 picom &
-sleep 0.1
 
 killall sxhkd
-sleep 0.1
 pgrep -x sxhkd > /dev/null || sxhkd &
 
 killall polybar
-sleep 0.1
 polybar &
 
-kitty -e fish -c "fastfetch; exec fish" &  
+killall flashfocus
+flashfocus &
+
 
 killall dunst
-sleep 0.1
 dunst &
 
-feh --bg-scale  ~/.dotfiles/bspwm/MOTD/wallpapers/wallpaper.jpg
+feh --bg-scale  ~/.dotfiles/bspwm/MOTD/wallpapers/bg1.jpg
 setxkbmap es 
-pgrep -x sxhkd > /dev/null || sxhkd &
 
 # -----------------------------------------------
 
@@ -47,7 +44,7 @@ bspc config right_padding 0
 # windows
 bspc config split_ratio 0.50
 bspc config window_gap 40
-bspc config border_width 2
+bspc config border_width 0
 bspc config normal_border_color "#dddd"
 bspc config active_border_color "#1e1e1e"
 bspc config focused_border_color "#ffffff"
@@ -58,8 +55,8 @@ bspc config urgent_border_color "#dd2727"
 
 # Monocle
 bspc config single_monocle true
-bspc config gapless_monocle false    # equivalent of i3 smart gaps, which only applies gaps if theres more than 1 window
-bspc config borderless_monocle false # border for when there is only 1 window (monocle)
+bspc config gapless_monocle false 
+bspc config borderless_monocle false 
 
 # -----------------------------------------------
 

@@ -1,41 +1,47 @@
-# App shortcuts --------------------------------
+# -----------------------------------------------
 
-# Terminal emulator
+# Keybindings
+
+# Kitty
 super + Return
 	kitty
 
-# Launcher
+# Rofi
 super + d
 	$HOME/.dotfiles/bspwm/MOTD/.config/rofi/launchers/type-7/launcher.sh
 
-# Firefox
+# Zen 
 super + b
-	firefox
+	zen
 
-# Screenshot
+# Flameshot
 super + s
 	flameshot gui
+
+# Flashfocus
+super + space
+    flash_window
+
 # -----------------------------------------------
 
-
-# Bpsmw controls --------------------------------
+# BSPWM binds
 
 # Quit/restart bspwm
 super + alt + {q,r}
 	bspc {quit,wm -r }
 
-# Make sxhkd reload its configuration files:
+# Make sxhkd reload its configuration files
 super + Escape
 	pkill -USR1 -x sxhkd
 
-# close and kill
+# Close and kill
 super + {_,shift + }w
 	bspc node -{c,k}
-# -----------------------------------------------
-								
-# Window controls -------------------------------
 
-# alternate between the tiled and monocle layout
+# -----------------------------------------------
+
+# Windows
+
 super + f
 	bspc desktop -l next
 
@@ -76,11 +82,11 @@ super + t
 # move a floating window
 super + alt + {Left,Down,Up,Right}
 	bspc node -v {-20 0,0 20,0 -20,20 0}
+
 # -----------------------------------------------
 
+# preselection
 
-# Preselection contols --------------------------
- 
 # preselect the direction
 super + ctrl + {Left,Down,Up,Right}
 	bspc node -p {west,south,north,east}
@@ -88,5 +94,6 @@ super + ctrl + {Left,Down,Up,Right}
 # cancel the preselection for the focused node
 super + space
 	bspc node -p cancel
+
 # -----------------------------------------------
 
