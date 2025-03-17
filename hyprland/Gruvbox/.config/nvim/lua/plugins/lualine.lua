@@ -20,7 +20,7 @@ return {
               return mode_icons[vim.fn.mode()] or ''
             end,
           },
-          lualine_b = {'branch', 'diff', 'diagnostics'},
+          lualine_b = {'branch', 'diagnostics'},
           lualine_c = {'filename', require'nvim-web-devicons'.get_icon},
           lualine_x = {'fileformat', 'filetype'},
           lualine_y = {'progress'},
