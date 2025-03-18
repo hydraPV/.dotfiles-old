@@ -1,16 +1,15 @@
+# -----------------------------------------------
 [global]
 
-
-# Position
+# General
     monitor = 1
     follow = keyboard
-    origin = bottom-center
-
-# Window 
-    width = 500
+    origin = top-right
+ 
+    width = 200
     frame_width = 0
-    corner_radius = 0
-    font = SauceCodePro Nerd Font 16
+    corner_radius = 8
+    font = Iosevka Nerd Font 16
 
     separator_height = 3
     padding = 8
@@ -29,33 +28,36 @@
     hide_duplicate_count = false
     show_indicators = false
 
+# -----------------------------------------------
+
 # Icons
     enable_recursive_icon_lookup = true
-    icon_theme = Nordzy
-    icon_path = /usr/share/icons/Nordzy
+    icon_theme = hicolor
+    icon_path = /usr/share/icons/hicolor
     icon_position = left
     min_icon_size = 70
     max_icon_size = 70
     icon_corner_radius = 5
     text_icon_padding = 6
 
+# -----------------------------------------------
 
 # Misc
-    browser = firefox
-    dmenu = ~/.config/rofi/launchers/type-7/launcher.sh
     always_run_script = true
     title = Dunst
     class = Dunst
-    
+
+# -----------------------------------------------
+
  # Colors
 [urgency_low]
-    background = "#254e70"
-    foreground = "#c9f1f6"
+    background = "#1d2021"
+    foreground = "#FFFF"
     timeout = 5
 
 [urgency_normal]
-    background = "#254e70"
-    foreground = "#c9f1f6"
+    background = "#1d2021"
+    foreground = "#ebdbb2"
     timeout = 5
     override_pause_level = 30
 
@@ -64,4 +66,8 @@
     foreground = "#ffffff"
     frame_color = "#ff0000"
     timeout = 0
-    override_pause_level = 60    
+    override_pause_level = 60
+
+# -----------------------------------------------
+
+
