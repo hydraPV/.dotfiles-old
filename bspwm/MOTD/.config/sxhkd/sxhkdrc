@@ -8,7 +8,7 @@ super + Return
 
 # Rofi
 super + d
-	$HOME/.dotfiles/bspwm/MOTD/.config/rofi/launchers/type-7/launcher.sh
+    	rofi -show drun -theme $HOME/.dotfiles/bspwm/MOTD/.config/rofi/config.rasi
 
 # Zen 
 super + b
