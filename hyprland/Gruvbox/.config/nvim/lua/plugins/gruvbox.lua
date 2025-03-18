@@ -7,8 +7,9 @@ return {
         transparent_mode = true,
         contrast = "hard",
         palette_overrides = {
-          bright_green = "#fbf1c7",
+            bright_green = "#fbf1c7",
         }
       })
+      vim.cmd('colorscheme gruvbox')
     end
 }
