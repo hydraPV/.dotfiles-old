@@ -17,11 +17,7 @@ method = pulse
 
 [color]
 
-gradient = 1
-gradient_count = 3
-gradient_color_1 = '#5e81ac'
-gradient_color_3 = '#81a1c1'
-gradient_color_2 = '#88c0d0'
+foreground = '#FFFFFF'
 
 # -----------------------------------------------
 
