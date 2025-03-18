@@ -6,8 +6,7 @@ super + Return
 
 # Launcher
 super + d
-	~/.dotfiles/bspwm/Nord/.config/rofi/launchers/type-3/launcher.sh
-
+    rofi -show drun -theme $HOME/.dotfiles/bspwm/Nord/.config/rofi/config.rasi
 # Firefox
 super + b
 	firefox

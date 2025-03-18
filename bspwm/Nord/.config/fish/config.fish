@@ -1,8 +1,9 @@
+set -U fish_prompt_pwd_dir_length 4
+
 function fish_prompt
 
-  # interactive user name @ host name, date/time in YYYY-mm-dd format and path
-
-  set_color 81A1C1; echo (prompt_pwd)
-  set_color 8fbcbb; echo  "> "
+  echo " "
+  set_color 81A1C1; echo "["(date "+%H:%M")"]---> "(prompt_pwd)
+  set_color a3be8c; echo  "  Hydra  "
 
 end
