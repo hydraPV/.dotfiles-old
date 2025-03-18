@@ -1,0 +1,34 @@
+# -----------------------------------------------
+
+[general]
+
+framerate = 75
+sensitivity = 60
+bar_width = 1
+bar_spacing = 1
+
+# -----------------------------------------------
+
+[input]
+
+ method = pulse
+
+# -----------------------------------------------
+
+[color]
+
+gradient = 1
+gradient_count = 3
+gradient_color_1 = '#ebdbb2'
+gradient_color_3 = '#d65d0e'
+gradient_color_2 = '#fe8019'
+
+# -----------------------------------------------
+
+[smoothing]
+
+integral = 100
+gravity = 75
+
+# -----------------------------------------------
+
