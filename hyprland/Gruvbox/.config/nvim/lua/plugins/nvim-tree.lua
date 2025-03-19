@@ -4,11 +4,16 @@ return {
     config = function()
       require("nvim-tree").setup({
         filters = {
-          dotfiles = true,
-        },        
+            enable = true,
+            dotfiles = true,
+        },
+
         view = {
-          side = "right",
-        }
+            number = false,
+            side = "right",
+            width = 40,
+        },
+       
       })
     end
   }
