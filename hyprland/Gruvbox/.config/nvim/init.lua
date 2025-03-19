@@ -3,9 +3,6 @@ require("config.lazy")
 
 --      General Settings
 
--- Makes nvim use system clipboard
-vim.opt.clipboard = "unnamedplus"
-
 -- Disable netrw (built-in file explorer)
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -23,7 +20,6 @@ vim.opt.softtabstop = 4
 vim.opt.expandtab = true
 
 
-
 --      Keybinds
 
 -- Set <space> as leader key
@@ -31,6 +27,10 @@ vim.g.mapleader = " "  -- Set space as the leader key
 
 -- Disable the leader key alone (makes <leader> a non-functional prefix)
 vim.keymap.set('n', '<leader>', '<nop>', { noremap = true, silent = true })
+
+-- Remap P and p
+vim.api.nvim_set_keymap('n', 'p', 'P', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'P', 'p', { noremap = true, silent = true })
 
 -- Disable Arrow Keys in Normal, Insert, and Visual Modes
 vim.keymap.set({ "n", "i", "v" }, "<Up>", "<NOP>", { desc = "Disable Up Arrow" })
