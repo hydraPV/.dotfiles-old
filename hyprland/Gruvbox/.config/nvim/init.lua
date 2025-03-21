@@ -1,103 +1,120 @@
--- Lazy bootstrap
+-------------------------------------------------
+-- Bootstrap lazy.nvim
 require("config.lazy")
 
---      General Settings
+-------------------------------------------------
+-- General configuration
 
--- Disable netrw (built-in file explorer)
+-- Disable netrw (Built in explorer)
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
--- Line numbers config
+-- Enable line numbers and relative numbers
 vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.cursorline = true
-vim.opt.fillchars = { eob = ' ' }
 
--- Set tab distance
-vim.opt.tabstop = 4        
-vim.opt.shiftwidth = 4    
-vim.opt.softtabstop = 4 
+-- Adds a background to the line in which the cursor is
+vim.opt.cursorline = true
+
+-- Remove these ~ on empty lines
+vim.opt.fillchars = {eob = ' '}
+
+-- Set <tab> space
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.softtabstop = 4
 vim.opt.expandtab = true
 
+-------------------------------------------------
+-- General keymaps / Variables
 
---      Keybinds
+-- Variables
+local map = vim.keymap.set
+local built = require('telescope.builtin')
+local hidden = ({ find_command = { 'rg', '--files', '--hidden', '-g', '!.git' } })
+local grep = { additional_args = function() return { "--hidden", "-g", "!.git" } end }
+local opt = { noremap = true, silent = true }
 
--- Set <space> as leader key
-vim.g.mapleader = " "  -- Set space as the leader key
+-- Leader key
+vim.g.mapleader = " " -- Sets 'space' as leader key
+map('n', '<leader>', '<nop>', opt) -- Disables space key in normal mode
 
--- Disable the leader key alone (makes <leader> a non-functional prefix)
-vim.keymap.set('n', '<leader>', '<nop>', { noremap = true, silent = true })
+-------------------------------------------------
+-- Movement keys
 
--- Remap P and p
-vim.api.nvim_set_keymap('n', 'p', 'P', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', 'P', 'p', { noremap = true, silent = true })
+-- Disables arrow keys
+map({"n", "i", "v"}, "<Up>", "<NOP>")
+map({"n", "i", "v"}, "<Down>", "<NOP>")
+map({"n", "i", "v"}, "<Left>", "<NOP>")
+map({"n", "i", "v"}, "<Right>", "<NOP>")
 
--- Disable Arrow Keys in Normal, Insert, and Visual Modes
-vim.keymap.set({ "n", "i", "v" }, "<Up>", "<NOP>", { desc = "Disable Up Arrow" })
-vim.keymap.set({ "n", "i", "v" }, "<Down>", "<NOP>", { desc = "Disable Down Arrow" })
-vim.keymap.set({ "n", "i", "v" }, "<Left>", "<NOP>", { desc = "Disable Left Arrow" })
-vim.keymap.set({ "n", "i", "v" }, "<Right>", "<NOP>", { desc = "Disable Right Arrow" })
-
--- Move in Insert Mode with <C-hjkl> (better navigation control)
-vim.api.nvim_set_keymap('i', '<C-h>', '<Left>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('i', '<C-j>', '<Down>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('i', '<C-k>', '<Up>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('i', '<C-l>', '<Right>', { noremap = true, silent = true })
-
-
---      Oil.nvim
-
--- Open oil.nvim (file explorer)
-vim.keymap.set("n", "<leader>o", require("oil").open)
+-- Move in insert mode with <C-hjkl>
+map('i', '<C-h>', '<Left>', opt)
+map('i', '<C-j>', '<Down>', opt)
+map('i', '<C-k>', '<Up>', opt)
+map('i', '<C-l>', '<Right>', opt)
 
 
+-------------------------------------------------
+-- Shortcuts
 
---      Nvim-tree
+-- Faster yanking/pasting
+map('n', '<leader>y', '"+y', opt)
+map('v', '<leader>y', '"+y', opt)
+map('n', '<leader>p', '"+p', opt)
+map('v', '<leader>p', '"+p', opt)
 
--- Toggle the Nvim-tree file explorer
-vim.keymap.set('n', '<leader>n', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
+-- Swap Paste behavior
+map('n', 'p', 'P', opt)
+map('n', 'P', 'p', opt)
 
--- Switch between Nvim-tree and the editor (toggle behavior)
-vim.keymap.set('n', '<leader>e', function() 
-  local nvim_tree_win_id = vim.fn.bufwinid('NvimTree')
-  if nvim_tree_win_id ~= -1 then
-    vim.cmd('wincmd p')
-  else
-    local status_ok, _ = pcall(require('nvim-tree').toggle)
-    if not status_ok then
-      print("Failed to toggle NvimTree")
-    end
-  end
-end, { noremap = true, silent = true })
+-- Save file 
+map('n', '<C-s>', ':w<CR>', opt)
+
+-- Clear search highlightning
+map('n', '<leader>nh', ':noh<CR>', opt)
+------------------------------------------------
+-- Plugin maps
+
+-- Telescope
+map('n', '<leader>fh', "<cmd>Telescope help_tags<CR>") -- Search help pages
+map('n', '<leader>fb', "<cmd>Telescope keymaps<CR>", opt) -- View all keybindings
+map('n', '<leader>ff', function() built.find_files(hidden) end, opt) -- Fuzzy find current directory
+map('n', '<leader>fg', function() built.live_grep(grep) end, opt) -- Grep files 
+map('n', '<leader>fr', built.oldfiles) -- Search old files
+map('n', '<leader>fc', function() built.find_files {cwd = vim.fn.stdpath 'config'} end) -- Find files on nvim config
 
 
---      Bufferline.nvim
+-- Explorers
+map('n', '<leader>o', function() require("mini.files").open(vim.uv.cwd(), true) end) -- Open mini.files
+map('n', '<leader>n', ':NvimTreeToggle<CR>', opt) -- open NvimTree.nvim
 
--- Close the current buffer (tab)
-vim.keymap.set('n', '<leader>w', ':bdelete<CR>', { noremap = true, silent = true })
 
--- Switch between buffers (1 to 5) using <leader> key
-for i = 1, 5 do
-  vim.keymap.set('n', '<leader>'..i, function() require'bufferline'.go_to_buffer(i) end, { noremap = true, silent = true })
+-- Bufferline
+map('n', '<leader>w', ':bdelete<CR>', opt) -- Close the current buffer
+for i = 1, 9 do
+  map("n", "<leader>" .. i, ":BufferLineGoToBuffer " .. i .. "<CR>", { noremap = true, silent = true }) -- Move between buffers
 end
 
 
---      Snacks.nvim
+-- Conform.nvim
+map('n', '<leader>f','<cmd>lua require("conform").format()<CR>',opt) -- Apply formatting
 
--- Search through open buffers using Snacks.nvim
-vim.keymap.set('n', "<leader>,", function() Snacks.picker.buffers() end)
 
--- Open git log
-vim.keymap.set('n', "<leader>gl", function() Snacks.picker.git_log() end)
+-- Snacks.nvim
+map('n', "<leader>gl", function() Snacks.picker.git_log() end) -- Open git log
+map('n', "<leader>z", function() Snacks.zen() end) -- Toggle zen mode
+map('n', "<leader>gb", function() Snacks.gitbrowse() end) -- Open git repo on a browser
+map('n', "<leader>gg", function() Snacks.lazygit() end) -- Open lazygit
 
--- Toggle Zen Mode
-vim.keymap.set('n', "<leader>z",  function() Snacks.zen() end)
+-------------------------------------------------
+-- Autocommands
 
--- Open current git repo in browser
-vim.keymap.set('n', "<leader>gz", function() Snacks.gitbrowse() end)
-
--- Open lazygit
-vim.keymap.set('n', "<leader>gg", function() Snacks.lazygit() end)
-
--- Color scheme selector
-vim.keymap.set('n', "<leader>uC", function() Snacks.picker.colorschemes() end)
+-- Highlight yanks
+vim.api.nvim_create_autocmd('TextYankPost', {
+  desc = 'Highlight when yanking (copying) text',
+  group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
+  callback = function()
+    vim.highlight.on_yank()
+  end,
+})
