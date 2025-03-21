@@ -1,87 +1,80 @@
-// IT JUST WORKS - TODD HOWARD
-
+// ----------------------------------------------
+// Main bar
 [
+  {
+    // General settings
 
-//		General bar 		
-	{
-		"position": "right",
-		"margin-right": 10,
-		"margin-top": 10,
-		"margin-bottom": 10,
+    "position": "right",
+    "margin-right": 10,
+    "margin-top": 10,
+    "margin-bottom": 10,
 
-//		Modules Placement
-		"modules-center":[
-			"clock",
-		],
+    // ------------------------------------------
+    // Module placing
 
-		"modules-right": [
-			"disk",
-			"cpu",
-			"temperature",
-			"memory",
-			"pulseaudio",
-		],
+    "modules-center": ["clock"],
+    "modules-right": ["disk", "cpu", "temperature", "memory", "pulseaudio"],
+    "modules-left": ["hyprland/workspaces"],
 
-		"modules-left": [
-			"hyprland/workspaces",
-		],
+    // ------------------------------------------
+    // Modules
 
+    // Hyprland Module
+    "hyprland/workspaces": {
+      "persistent-workspaces": {
+        "*": 6
+      },
+      "format": "{icon}",
+      "format-icons": {
+        "active": "",
+        "default": ""
+      }
+    },
 
-//		Modules
+    // Clock Module
+    "clock": {
+      "format": "{:%H\n%M}",
+      "tooltip": "true",
+      "tooltip-format": "{:%d-%m}"
+    },
 
-		// Hyprland module
-		"hyprland/workspaces": {
+    // Disk Module
+    "disk": {
+      "interval": 30,
+      "format": "",
+      "path": "/"
+    },
 
-			// Show empty workspaces
-				"persistent-workspaces": {
-					"*": 6
-				},
+    // CPU Module
+    "cpu": {
+      "interval": 10,
+      "format": " {usage}",
+      "tooltip": "true",
+      "tooltip-format": "{load}"
+    },
 
-			// Icons
-			"format": "{icon}",
-				"format-icons": {
-					"active":"",
-					"default":"",
-				},
-			},
+    // Temperature Module
+    "temperature": {
+      "interval": 1,
+      "hwmon-path": "/sys/devices/pci0000:00/0000:00:18.3/hwmon/hwmon3/temp1_input",
+      "format": " {temperatureC}"
+    },
 
-			"clock": {
-    			"format": "{:%H\n%M}",
-				"tooltip": "true",
-				"tooltip-format": "{:%d-%m}",
-    		},
+    // Memory Module
+    "memory": {
+      "interval": 10,
+      "format": " {percentage}",
+      "tooltip": "true",
+      "tooltip-format": "{used} / {total}"
+    },
 
-
-			"disk": {
-				"interval": 30,
-				"format": "",
-				"path": "/"
-			},
-
-			"cpu": {
-				"interval": 10,
-				"format": " {usage}",
-				"tooltip": "true",
-				"tooltip-format": "{load}",
-			},
-
-			"temperature": {
-				"interval": 1,
-				"hwmon-path": "/sys/devices/pci0000:00/0000:00:18.3/hwmon/hwmon3/temp1_input",
-				"format": " {temperatureC}"
-			},
-
-			"memory":{
-    			"interval": 10,
-    			"format": " {percentage}",
-				"tooltip": "true",
-				"tooltip-format": "{used} / {total}",
-			},
-
-			"pulseaudio": {
-				"format": "{volume}%",
-				"scroll-step": 1,
-				"on-click": "amixer set Master toggle",
-			},
-	}		
+    // Pulseaudio module
+    "pulseaudio": {
+      "format": "{volume}%",
+      "scroll-step": 1,
+      "on-click": "amixer set Master toggle"
+    }
+  }
 ]
+// ----------------------------------------------
+
