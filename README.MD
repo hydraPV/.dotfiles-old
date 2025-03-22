@@ -10,8 +10,7 @@
 + Bar - [Polybar](https://github.com/polybar/polybar) / [Waybar](https://github.com/Alexays/Waybar)
 + Launcher - [Rofi](https://github.com/davatorium/rofi) 
 
-## Rices
-<p align="center">
+<h3> Rices </h3>
 
 <h1 align="center">MOTD</h1>
 
@@ -19,7 +18,8 @@
 
 <h1 align="center">Nord</h1>
 
-![Alt text](bspwm/Nord/screenshots/rice.gif)
+![Alt text](bspwm/Nord/screenshots/gif.gif)
 
 <h1 align="center">Gruvbox</h1>
+
 ![Alt text](hyprland/Gruvbox/screenshots/gif.gif)
