@@ -1,13 +1,7 @@
 #! /bin/bash
-
-# Verifies if the terminal is using a Nerd Font
-check_nerd_font() { echo -e "" > /dev/null 2>&1 || { echo "Nerd Font not detected. Use a compatible Nerd Font."; exit 1; }; }
-check_nerd_font
-
-# Ascii art made using https://www.asciiart.eu/text-to-ascii-art
 cat << "ASCII"
 
-██╗███╗   ██╗███████╗████████╗ █████╗ ██╗     ██╗     ███████╗██████╗ 
+██╗███╗   ██╗███████╗████████╗ █████╗ ██╗     ██╗     ███████╗██████╗
 ██║████╗  ██║██╔════╝╚══██╔══╝██╔══██╗██║     ██║     ██╔════╝██╔══██╗
 ██║██╔██╗ ██║███████╗   ██║   ███████║██║     ██║     █████╗  ██████╔╝
 ██║██║╚██╗██║╚════██║   ██║   ██╔══██║██║     ██║     ██╔══╝  ██╔══██╗
@@ -16,139 +10,108 @@ cat << "ASCII"
 
 ASCII
 
-# Brief description of what this script does
-echo "This script will:"
-echo "1) Ask for your distribution"
-echo "2) Install the needed packages"
-echo "3) Ask to create a backup (if needed)"
-echo "4) Install dotfiles"
-echo "5) Create symlinks"
-echo " "
-echo -e "Although this script \033[1mshould not\033[0m harm your system, use it at your own risk."
-echo " "
-echo " "
-sleep 5
+printf "Select your package manager: \n"
+printf "[1] Debian/Ubuntu/Mint/PopOS (APT) \n [2] Fedora/Centos/RHEL (DNF) \n"
+printf "[3] Arch/Manjaro/Endeavour/Arco (Pacman) \n"
+read -r -p ": " pm_choice
 
-# Distribution selection
-echo "Please select your distribution and your package manager: "
-echo -e "[1]  Debian/ Ubuntu/󰣭 Mint/ PopOS (\033[1mAPT\033[0m)"
-echo -e "[2]  Fedora/ Centos/ RHEL (\033[1mDNF\033[0m)"
-echo -e "[3] 󰣇 Arch/ Manjaro/ Endeavour/ ArcoLinux (\033[1mPacman\033[0m)"
-echo -e "[4]  openSUSE (\033[1mZypper\033[0m)"
-echo "[5] Exit"
-echo " "
-echo " "
-
-# Capture the input of the distribution selection
-while :; do
-    echo "Enter your choice [1-5]: "
-    read -r -p "󱞩 " DistroPrompt
-    [[ "$DistroPrompt" =~ ^[1-5]$ ]] && break
-    echo " Please enter [1-5]."
-done
-
-
-# Define "packages" as an array containing all needed packages
-packages=(bspwm sxhkd kitty fish firefox picom polybar neovim feh flameshot dunst fastfetch)
-
-# Function to install and verify packages
-install_packages() {
-    local manager=$1
-    local install=$2
-    local listing=$3
-    echo "Installing packages using $manager..."
-    $install "${packages[@]}" &>/dev/null
-
-    # Check if packages were correctly installed
-    for package in "${packages[@]}"; do
-        if $listing | grep -q "$package"; then
-            echo " $package"
-        else
-            echo " $package. Please try installing it manually after the installation process ends."
-        fi
-    done
-
-    echo "Package installation process finished."
-    echo " "
-}
-
-# Package installation process based on distribution choice
-case "$DistroPrompt" in
-    1) # APT Package installation
-        install_packages "APT" "sudo apt-get install" "dpkg -l" 
-        ;;
-    2) # DNF Package installation
-        install_packages "DNF" "sudo dnf install" "dnf list installed" 
-        ;;
-    3) # Pacman package installation
-        install_packages "Pacman" "sudo pacman -S" "pacman -Q" 
-        ;;
-    4) # Zypper package installation
-        install_packages "Zypper" "sudo zypper install" "zypper search -i"
-        ;;
-    5) # Exit installation process
-        echo "Aborting..."
-        sleep 1
-        exit 1
-        ;;
+case $pm_choice in
+    1)
+        pm_install="sudo apt install -y"
+        pm_listing="dpkg -l"
+    ;;
+    2)
+        pm_install="sudo dnf install -y"
+        pm_listing="dnf list installed"
+    ;;
+    3)
+        pm_install="sudo pacman -S --noconfirm"
+        pm_listing="pacman -Q"
+    ;;
+    *) echo "Invalid choice. Exiting..."; exit 1 ;;
 esac
 
-# Check for an existing .dotfiles directory on $HOME
-if [ -d "$HOME/.dotfiles/" ]; then 
+printf "Select which dotfiles to install: \n"
+printf "[1] Hyprland | [2] Bspwm | [3] Both \n"
+read -r -p ": " wm_choice
 
-    echo -e "There is a '\033[1m.dotfiles\033[0m' directory in your home directory."
-    echo "A new directory is required for the installation to proceed."
-    echo " " 
+common_pkgs=(neovim kitty fish firefox dunst fastfetch tree sddm unzip ripgrep cava rofi fzf)
+hyprland_pkgs=(hyprland waybar wl-clipboard)
+bspwm_pkgs=(bspwm sxhkd picom polybar feh flameshot xclip)
 
-    while :; do
-    echo "Do you want to make a backup of your current .dotfiles directory? [Y/n]"
-    read -r -p "󱞩 " BakPrompt
-    BakPrompt=$(echo "$BakPrompt" | tr '[:upper:]' '[:lower:]')
-    [[ "$BakPrompt" =~ ^(y|n|)$ ]] && break
-    echo " Please enter [Y/n]."
+install_verify() {
+    local packages=("$@")
+    for pkg in "${packages[@]}"; do
+        if $pm_listing | grep -q "$pkg"; then
+            echo "$pkg is installed"
+        else
+            echo "$pkg Is not installed. Please try installing it manually after the installation process ends."
+        fi
     done
+}
 
-    # Converts any uppercase input into lowercase
-    BakPrompt=$(echo "$BakPrompt" | tr '[:upper:]' '[:lower:]')
+install_wm() {
+    local wm_name=$1
+    local wm_pkgs=$2
 
-    case "$BakPrompt" in
-        y)
-            # Backup creation
-            echo " "
-            echo " "
-            echo "Creating .dotfiles.bak directory..."
-            echo " "
-            mv "$HOME/.dotfiles" "$HOME/.dotfiles.bak"
+    echo "Installing $wm_name packages..."
+    for pkg in "${wm_pkgs[@]}"; do
+        $pm_install "$pkg"
+    done
+}
 
-            # Check the backup process 
-            if [ -d "$HOME/.dotfiles.bak" ]; then
+printf "Installing common packages... \n"
+for pkg in "${common_pkgs[@]}"; do
+    $pm_install "$pkg"
+done
+if [[ $wm_choice == 1 || $wm_choice == 3 ]]; then
+    install_wm "Hyprland" hyprland_pkgs[@] &>/dev/null/
+fi
+if [[ $wm_choice == 2 || $wm_choice == 3 ]]; then
+    install_wm "Bspwm" bspwm_pkgs[@] &>/dev/null/
+fi
 
-                echo " Backup successfully created"
+all_pkgs=("${common_pkgs[@]}" "${hyprland_pkgs[@]}" "${bspwm_pkgs[@]}")
+install_verify "${all_pkgs[@]}"
 
-            else
+printf "Installation process finished. \n"
+printf "If a package failed to install, please install it manually after the script ends. \n"
 
-                echo " Something went wrong creating a backup. Please try creating it manually."
-                echo " "
-                echo "Aborting..."
-                sleep 1
-                exit 1
+error_msg() {
+    local msg=$1
+    if [[ $? -eq 0 ]]; then
+        echo "$msg successfully created"
+    else
+        echo "Failed to create $msg."
+        exit 1
+    fi
+}
 
-            fi
-        ;;
+if [ -d "$HOME/.dotfiles/" ]; then
+    echo "There is already a '.dotfiles' directory in $HOME."
+    printf "A new one is the best option for installing all the dotfiles \n What do you want to do? \n"
+    printf "[1] Create a backup | [2] Install over it (recommended if installing a missing rice) | [3] Exit \n"
+    read -r -p ": " duped_dotfiles
 
-        n)
-            echo "A new .dotfiles directory is needed for the installation"
-            echo "Aborting..."
-            exit 1
-        ;;
+    case $duped_dotfiles in
+        1) mv "$HOME/.dotfiles/" "$HOME/.dotfiles.bak/" && error_msg "Backup";;
+        2) mv bspwm/ hyprland/ fonts/ icons/ RiceSwap.sh "$HOME/.dotfiles/" && error_msg "Directories";;
+        3) echo "Aboring..."; exit 0;;
     esac
 fi
 
-# Dotfiles setup
-echo "creating directory..."
-mkdir "$HOME/.dotfiles" && { echo " Directory created."; } || { echo " Failed to create directory."; exit 1; }
+echo "Creating .dotfiles directory on $HOME"
+mkdir "$HOME/.dotfiles/" && error_msg "Directory"
 
-echo "Moving dotfiles..."
-mv bspwm hyprland "$HOME/.dotfiles" && { echo " Directories moved."; } || { echo " Failed to move directories."; exit 1; }
+printf "Moving Selected dotfiles... \n"
+if [[ $wm_choice == 1 || $wm_choice == 3 ]]; then
+    mv hyprland/ "$HOME/.dotfiles/" && error_msg "Directory"
+fi
+if [[ $wm_choice == 2 || $wm_choice == 3 ]]; then
+    mv bspwm/ "$HOME/.dotfiles/" && error_msg "Directory"
+fi
 
-echo "Installation process completed, manually install packages if the automatic installation failed, then use the swap.sh script to apply a rice"
+echo
+printf "Installation process finished \n You should now reboot your PC"
+printf "Exiting..."
+exit 0
