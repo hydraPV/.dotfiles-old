@@ -23,3 +23,4 @@
 <h1 align="center">Gruvbox</h1>
 
 ![Alt text](hyprland/Gruvbox/screenshots/gif.gif)
+[Nightab](https://pastebin.com/Z4nNn9jT)
